@@ -1,0 +1,205 @@
+:root {
+  --bg: #212121;
+  --panel: #262e3b;
+  --surface: #1f1f1f;
+  --text: #ffffff;
+  --muted: #a9abb3;
+  --red: #c41e3a; /* primary bold red */
+  --red-light: #ff4d4d; /* hover/active */
+  --round: 14px;
+}
+* {
+  box-sizing: border-box;
+  font-family: system-ui, Segoe UI, Roboto, Inter, Arial, sans-serif;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+.wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+/* MERGED: single-column calculator so right panel becomes part of left */
+.calc {
+  width: min(920px, 98vw);
+  background: linear-gradient(180deg, var(--panel), #23272f);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  display: grid;
+  grid-template-columns: 1fr; /* single column */
+  gap: 18px;
+}
+
+/* Left column: Screen + toolbar + basic keypad */
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+.badges {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.badge {
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.screen {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  /* ensure horizontal scroll for long expressions */
+  overflow-x: auto;
+}
+#expr {
+  min-height: 36px;
+  color: #c9cbd4;
+  font-size: 15px;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-all;
+  cursor: text;
+  user-select: text;
+}
+#result {
+  font-size: 46px;
+  color: var(--text);
+  text-align: right;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* function toolbar */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.tool-btn {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #2b3139;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+  min-width: 84px;
+  text-align: center;
+}
+.tool-btn.active {
+  background: linear-gradient(180deg, var(--red), var(--red-light));
+  box-shadow: 0 8px 20px rgba(196, 30, 58, 0.18);
+}
+
+/* keypad grid */
+.keygrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(6, 1fr);
+}
+button.key {
+  border: none;
+  background: #222528;
+  color: var(--text);
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.06s ease, background 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+button.key:active {
+  transform: translateY(1px);
+}
+button.key.op {
+  background: linear-gradient(180deg, var(--red), var(--red-light));
+  color: #fff;
+}
+button.key.alt {
+  background: #2f353b;
+}
+
+/* merged scientific panel (now placed below keygrid inside left) */
+.sci-panel {
+  background: linear-gradient(180deg, #222428, #212327);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+.sci-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+/* bottom-left floating toggle (only for small screens where we hide right column) */
+.sci-float {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  font-size: 22px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 30px rgba(196, 30, 58, 0.18);
+  cursor: pointer;
+}
+
+/* responsiveness */
+@media (max-width: 980px) {
+  .calc {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+  }
+  /* right panel is merged — keep float to open overlay of scientific if desired */
+  .sci-float {
+    display: flex;
+  }
+  .sci-panel {
+    /* on small screens keep merged panel visible too (no display:none) */
+  }
+}
+@media (max-width: 620px) {
+  .keygrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .sci-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .tool-btn {
+    min-width: 72px;
+  }
+  #result {
+    font-size: 34px;
+  }
+}
