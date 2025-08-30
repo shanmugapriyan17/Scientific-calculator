@@ -1,662 +1,358 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Scientific Calculator</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div class="wrap">
-      <div class="calc" id="calculator">
-        <!-- LEFT: screen + basic keypad (now merged with scientific below) -->
-        <div class="left">
-          <div class="topbar">
-            <div style="font-weight: 800">Scientific Calculator</div>
-            <div class="badges">
-              <div class="badge" id="modeBadge">Rad</div>
-              <div
-                class="badge"
-                id="memBadge"
-                title="Memory (MR to read)"
-                style="display: none"
-              >
-                M
-              </div>
-            </div>
-          </div>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Scientific Calculator — Fixed</title>
+  <link rel="stylesheet" href="./style.css">
 
-          <div class="screen" role="region" aria-label="calculator screen">
-            <div
-              id="expr"
-              contenteditable="true"
-              spellcheck="false"
-              aria-label="expression"
-            ></div>
-            <div id="result">0</div>
-          </div>
+   <!-- icon -->
 
-          <div class="toolbar" style="margin-top: 8px">
-            <div class="tool-btn" id="appendToggle">Append</div>
-            <div class="tool-btn" id="prependToggle">Prepend</div>
-            <div class="tool-btn" id="reverseBtn">Reverse</div>
-            <div class="tool-btn" id="degToggle">Rad/Deg</div>
-          </div>
+   <link rel="icon" href="./IMG/mathemetic.png" />
+   <link
+     href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Zeyada&display=swap"
+     rel="stylesheet"
+   />
 
-          <div class="keygrid" id="keys">
-            <!-- Row 1 -->
-            <button class="key alt" data-insert="(">(</button>
-            <button class="key alt" data-insert=")">)</button>
-            <button class="key alt" data-act="mc">MC</button>
-            <button class="key alt" data-act="m+">M+</button>
-            <button class="key alt" data-act="m-">M-</button>
-            <button class="key alt" data-act="mr">MR</button>
+   <!-- font -->
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <link
+     href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+     rel="stylesheet"
+   />
 
-            <!-- Row 2 (functions) -->
-            <button class="key alt" data-act="2nd">2nd</button>
-            <button class="key alt" data-insert="sqr(">x²</button>
-            <button class="key alt" data-insert="cube(">x³</button>
-            <button class="key alt" data-insert="pow(">xʸ</button>
-            <button class="key alt" data-insert="exp(">eˣ</button>
-            <button class="key alt" data-insert="pow10(">10ˣ</button>
 
-            <!-- Row 3 -->
-            <button class="key alt" data-insert="inv(">1/x</button>
-            <button class="key alt" data-insert="sqrt(">√x</button>
-            <button class="key alt" data-insert="cbrt(">∛x</button>
-            <button class="key alt" data-insert="yroot(">ʸ√x</button>
-            <button class="key alt" data-insert="ln(">ln</button>
-            <button class="key alt" data-insert="log10(">log₁₀</button>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>SCIENTIFIC CALCULATOR</h1>
+      <p>Shortcuts : Alt+A Append, Alt+P Prepend, Alt+R Reverse</p>
+    </header>
 
-            <!-- Row 4 -->
-            <button class="key alt" data-insert="fact(">x!</button>
-            <button class="key alt" data-insert="sin(">sin</button>
-            <button class="key alt" data-insert="cos(">cos</button>
-            <button class="key alt" data-insert="tan(">tan</button>
-            <button class="key alt" data-insert="E">e</button>
-            <button class="key alt" data-act="EE">EE</button>
+    <div class="calc" id="calc">
+      <div class="left">
+        <div class="display-box">
+          <input id="expr" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false" />
+        </div>
 
-            <!-- Row 5 -->
-            <button class="key alt" data-act="rand">Rand</button>
-            <button class="key alt" data-insert="sinh(">sinh</button>
-            <button class="key alt" data-insert="cosh(">cosh</button>
-            <button class="key alt" data-insert="tanh(">tanh</button>
-            <button class="key alt" data-insert="PI">π</button>
-            <button class="key alt" data-act="toggleDeg">Deg</button>
-
-            <!-- Row 6 (basic ops) -->
-            <button class="key alt" data-act="ac">AC</button>
-            <button class="key alt" data-act="sign">+/−</button>
-            <button class="key alt" data-act="percent">%</button>
-            <button class="key op" data-insert=" ÷ ">÷</button>
-            <button class="key op" data-insert=" × ">×</button>
-            <button class="key op" data-insert=" − ">−</button>
-
-            <!-- Row 7 numbers -->
-            <button class="key" data-insert="7">7</button>
-            <button class="key" data-insert="8">8</button>
-            <button class="key" data-insert="9">9</button>
-            <button class="key op" data-insert=" + ">+</button>
-            <button class="key alt icon" title="Backspace" data-act="back">
-              ⌫
-            </button>
-            <button class="key op" data-act="equals">=</button>
-
-            <!-- Row 8 -->
-            <button class="key" data-insert="4">4</button>
-            <button class="key" data-insert="5">5</button>
-            <button class="key" data-insert="6">6</button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-
-            <!-- Row 9 -->
-            <button class="key" data-insert="1">1</button>
-            <button class="key" data-insert="2">2</button>
-            <button class="key" data-insert="3">3</button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-
-            <!-- Row 10 -->
-            <button class="key alt icon" title="Calculator">🧮</button>
-            <button class="key" data-insert="0">0</button>
-            <button class="key" data-insert=".">.</button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
-            <button class="key w3 alt" style="visibility: hidden"></button>
+        <div class="control-row" aria-hidden="false">
+          <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="ctrl-btn" id="btnAppend">Append</button>
+            <button class="ctrl-btn" id="btnPrepend">Prepend</button>
+            <button class="ctrl-btn" id="btnReverse">Reverse</button>
           </div>
         </div>
 
-        <!-- NOTE: right column removed (merged). floating sci button kept if you want overlay on small screens -->
+        <div class="keys" id="keys" aria-label="Calculator keys">
+          <button class="key" data-key="(">(</button>
+          <button class="key" data-key=")">)</button>
+          <button class="key sep" data-key="MC">MC</button>
+          <button class="key sep" data-key="MR">MR</button>
+
+          <button class="key" data-key="sin">sin</button>
+          <button class="key" data-key="cos">cos</button>
+          <button class="key" data-key="tan">tan</button>
+          <button class="key" data-key="ln">ln</button>
+
+          <button class="key" data-key="√">√</button>
+          <button class="key" data-key="x²">x²</button>
+          <button class="key" data-key="x^y">xʸ</button>
+          <button class="key" data-key="log">log</button>
+
+          <button class="key" data-key="AC">AC</button>
+          <button class="key" data-key="+/-">+/-</button>
+          <button class="key" data-key="%">%</button>
+          <button class="key op" data-key="÷">÷</button>
+
+          <button class="key" data-key="7">7</button>
+          <button class="key" data-key="8">8</button>
+          <button class="key" data-key="9">9</button>
+          <button class="key op" data-key="×">×</button>
+
+          <button class="key" data-key="4">4</button>
+          <button class="key" data-key="5">5</button>
+          <button class="key" data-key="6">6</button>
+          <button class="key op" data-key="-">-</button>
+
+          <button class="key" data-key="1">1</button>
+          <button class="key" data-key="2">2</button>
+          <button class="key" data-key="3">3</button>
+          <button class="key op" data-key="+">+</button>
+
+          <button class="key w2" data-key="0">0</button>
+          <button class="key" data-key=".">.</button>
+          <button class="key op" data-key="=">=</button>
+        </div>
       </div>
 
-      <!-- floating toggle for small screens to show scientific -->
-      <button
-        class="sci-float"
-        id="sciFloat"
-        title="Scientific"
-        aria-hidden="true"
-        style="display: none"
-      >
-        ≡
-      </button>
+      <div class="right" aria-live="polite">
+        <h4 class="history-title">History</h4>
+        <div id="history"></div>
+        <div class="hint">
+          Tip: Click a history row to reuse its expression. Use <strong>Alt + A/P/R</strong> for Append/Prepend/Reverse.
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-      (function () {
-        // Elements
-        const exprEl = document.getElementById("expr");
-        const resEl = document.getElementById("result");
-        const keysEl = document.getElementById("keys");
-        const modeBadge = document.getElementById("modeBadge");
-        const memBadge = document.getElementById("memBadge");
-        const appendToggle = document.getElementById("appendToggle");
-        const prependToggle = document.getElementById("prependToggle");
-        const reverseBtn = document.getElementById("reverseBtn");
-        const degToggle = document.getElementById("degToggle");
-        const sciPanel = document.getElementById("sciPanel");
-        const sciFloat = document.getElementById("sciFloat");
+  <script>
+  (function(){
+    // Elements
+    const exprEl = document.getElementById('expr');
+    const keysEl = document.getElementById('keys');
+    const historyEl = document.getElementById('history');
+    const btnAppend = document.getElementById('btnAppend');
+    const btnPrepend = document.getElementById('btnPrepend');
+    const btnReverse = document.getElementById('btnReverse');
 
-        // State
-        let expression = "";
-        let isDeg = false;
-        let memory = 0;
-        let alt = false; // 2nd functions (asin etc)
-        let appendMode = false;
-        let prependMode = false;
+    // State for append/prepend mode
+    let currentMode = 'none';
 
-        // Math helpers
-        const toRad = (x) => (isDeg ? (x * Math.PI) / 180 : x);
-        const sin = (x) => Math.sin(toRad(x));
-        const cos = (x) => Math.cos(toRad(x));
-        const tan = (x) => Math.tan(toRad(x));
-        const asin = (x) =>
-          isDeg ? (Math.asin(x) * 180) / Math.PI : Math.asin(x);
-        const acos = (x) =>
-          isDeg ? (Math.acos(x) * 180) / Math.PI : Math.acos(x);
-        const atan = (x) =>
-          isDeg ? (Math.atan(x) * 180) / Math.PI : Math.atan(x);
-        const sinh = (x) => Math.sinh(x);
-        const cosh = (x) => Math.cosh(x);
-        const tanh = (x) => Math.tanh(x);
-        const ln = (x) => Math.log(x);
-        const log10 = (x) => Math.log10(x);
-        const sqrt = (x) => Math.sqrt(x);
-        const cbrt = (x) => Math.cbrt(x);
-        const inv = (x) => 1 / x;
-        const sqr = (x) => x * x;
-        const cube = (x) => x * x * x;
-        const exp = (x) => Math.exp(x);
-        const pow10 = (x) => Math.pow(10, x);
-        const pow = (a, b) => Math.pow(a, b);
-        const yroot = (x, y) => Math.pow(x, 1 / y);
-        const fact = (n) => {
-          n = Math.trunc(n);
-          if (n < 0) return NaN;
-          let r = 1;
-          for (let i = 2; i <= n; i++) r *= i;
-          return r;
-        };
-        const Rand = () => Math.random();
+    // Keep focus on expr
+    function safeFocus(){ try { exprEl.focus(); } catch(e) {} }
 
-        // expose helpers for evaluator
-        Object.assign(window, {
-          sin,
-          cos,
-          tan,
-          asin,
-          acos,
-          atan,
-          sinh,
-          cosh,
-          tanh,
-          ln,
-          log10,
-          sqrt,
-          cbrt,
-          inv,
-          sqr,
-          cube,
-          exp,
-          pow10,
-          pow,
-          yroot,
-          fact,
-          Rand,
-          PI: Math.PI,
-          E: Math.E,
-        });
+    // Unified mode toggling and visual feedback
+    function setMode(mode) {
+      // Deselect all buttons first
+      btnAppend.classList.remove('primary');
+      btnPrepend.classList.remove('primary');
+      
+      // If the same mode is clicked, turn it off. Otherwise, set the new mode.
+      currentMode = (currentMode === mode) ? 'none' : mode;
 
-        // initialize UI
-        exprEl.textContent = "";
-        resEl.textContent = "0";
-        modeBadge.textContent = isDeg ? "Deg" : "Rad";
+      if (currentMode === 'append') {
+        btnAppend.classList.add('primary');
+      } else if (currentMode === 'prepend') {
+        btnPrepend.classList.add('primary');
+      }
+      safeFocus();
+    }
 
-        // Make contenteditable reliably editable without overwriting caret while typing:
-        // - Don't overwrite exprEl text when user is actively focused in it (prevents caret jumping)
-        // - Sync final content on blur/input
-        exprEl.setAttribute("tabindex", "0");
-        exprEl.addEventListener("click", () => {
-          // ensure focus on click
-          if (document.activeElement !== exprEl) exprEl.focus();
-        });
-        exprEl.addEventListener("blur", () => {
-          // when user leaves the field, sync the expression and UI
-          expression = exprEl.textContent || "";
-          updateUI();
-        });
+    // Append/Prepend/Reverse actions now use the expression box value
+    function doAppend(){ 
+      setMode('append');
+    }
+    function doPrepend(){ 
+      setMode('prepend');
+    }
+    function doReverse(){ 
+      exprEl.value = String(exprEl.value || '').split('').reverse().join(''); 
+      setMode('none');
+      btnFlash(btnReverse);
+      safeFocus();
+    }
 
-        // Helpers
-        function updateUI() {
-          // do not overwrite user typing selection/caret
-          if (document.activeElement !== exprEl) {
-            exprEl.textContent = expression;
-          }
-          try {
-            const v = evaluate(expression);
-            resEl.textContent =
-              v === undefined || v === null || Number.isNaN(v)
-                ? "0"
-                : formatNumber(v);
-          } catch (e) {
-            resEl.textContent = "Err";
-          }
-          modeBadge.textContent = isDeg ? "Deg" : "Rad";
-          memBadge.style.display = memory !== 0 ? "inline-block" : "none";
-          // toolbar active classes
-          appendToggle.classList.toggle("active", appendMode);
-          prependToggle.classList.toggle("active", prependMode);
+    btnAppend.addEventListener('click', (e)=>{ e.preventDefault(); doAppend(); });
+    btnPrepend.addEventListener('click', (e)=>{ e.preventDefault(); doPrepend(); });
+    btnReverse.addEventListener('click', (e)=>{ e.preventDefault(); doReverse(); });
+
+    function btnFlash(el){
+      el.classList.add('primary-flash');
+      setTimeout(()=>el.classList.remove('primary-flash'), 160);
+    }
+
+    // Unified token insertion used by keypad + keyboard
+    function insertToken(token){
+      let s = exprEl.value || '';
+
+      // Append/Prepend mode logic for numbers only
+      if(/^\d$/.test(token) || token === '.') {
+        if(currentMode === 'append'){
+          exprEl.value = s + token;
+        } else if (currentMode === 'prepend') {
+          exprEl.value = token + s;
+        } else {
+          exprEl.value = s + token;
         }
+        return;
+      }
+      
+      // All other tokens (operators, functions, etc.) reset the mode
+      currentMode = 'none';
+      btnAppend.classList.remove('primary');
+      btnPrepend.classList.remove('primary');
 
-        function formatNumber(x) {
-          if (!isFinite(x)) return String(x);
-          if (Math.abs(x) >= 1e10 || (Math.abs(x) < 1e-6 && x !== 0))
-            return x.toExponential(8);
-          return Number(x.toPrecision(12)).toString();
+
+      const displayOp = (t) => t === '*' ? '×' : t === '/' ? '÷' : t;
+
+      if(token === '('){
+        if(s && /[0-9\)\.πe]$/.test(s)) exprEl.value = s + '×(';
+        else exprEl.value = s + '(';
+        return;
+      }
+      if(token === ')'){ exprEl.value = s + ')'; return; }
+
+      if(['+','-','×','÷','^'].includes(token)){
+        const disp = displayOp(token);
+        if(!s && disp === '-') { exprEl.value = '-'; return; }
+        if(s && /[+\-×÷^]$/.test(s)){
+          if(disp === '-' && /[(+]$/.test(s)){ exprEl.value = s + '-'; return; }
+          exprEl.value = s.slice(0,-1) + disp; return;
         }
+        exprEl.value = s + disp; return;
+      }
 
-        // evaluate with replacements for pretty operators
-        function evaluate(exp) {
-          if (!exp) return 0;
-          let s = String(exp);
+      if(token === 'AC'){ exprEl.value = ''; return; }
+      if(token === '+/-'){
+        if(!s){ exprEl.value = '-'; return; }
+        const m = s.match(/(.+?)(-?)(\(?[0-9\.πe]+\)?)$/);
+        if(m){ let prefix=m[1]||''; let sign=m[2]||''; let num=m[3]||''; sign = (sign==='-') ? '' : '-'; exprEl.value = prefix + sign + num; return; }
+        return;
+      }
+      if(token === '%'){ const m = s.match(/(.+?)([0-9\.πe]+|\([^\)]+\))$/); if(m) exprEl.value = m[1] + '(' + m[2] + '/100)'; return; }
+      if(token === '√'){ exprEl.value = s + '√('; return; }
+      if(token === 'x²'){ exprEl.value = s + '^2'; return; }
+      if(token === 'x^y'){ exprEl.value = s + '^'; return; }
+      if(['sin','cos','tan','ln','log'].includes(token)){
+        if(s && /[0-9\)πe]$/.test(s)) exprEl.value = s + '×' + token + '(';
+        else exprEl.value = s + token + '(';
+        return;
+      }
+      if(token === '='){ evaluateExpression(); return; }
+    }
 
-          // replace pretty unicode operators with JS equivalents
-          s = s
-            .replace(/ × /g, " * ")
-            .replace(/ ÷ /g, " / ")
-            .replace(/ − /g, " - ")
-            .replace(/ \+ /g, " + ")
-            .replace(/PI/g, "(PI)")
-            .replace(/E(?![A-Za-z])/g, "(E)");
+    function doBackspace(){ 
+      exprEl.value = (exprEl.value||'').slice(0,-1); 
+      // Backspace also resets the mode
+      currentMode = 'none';
+      btnAppend.classList.remove('primary');
+      btnPrepend.classList.remove('primary');
+    }
 
-          // EE handling (like 1 EE 3 => 1e3)
-          s = s.replace(/(\d+(?:\.\d+)?)[ ]?EE[ ]?([+\-]?\d+)/gi, "($1e$2)");
+    // Evaluator (same robust logic as before)
+    function evaluateExpression(){
+      const raw = exprEl.value || '';
+      if(!raw) return;
+      let s = String(raw);
 
-          // autoclose parentheses
-          const opens = (s.match(/\(/g) || []).length;
-          const closes = (s.match(/\)/g) || []).length;
-          if (opens > closes) s += ")".repeat(opens - closes);
+      s = s.replace(/×/g,'*').replace(/÷/g,'/').replace(/\^/g,'**').replace(/√\(/g,'sqrt(');
+      s = s.replace(/π/g,'Math.PI');
+      s = s.replace(/\bln\(/g,'Math.log(');
+      s = s.replace(/\blog\(/g,'Math.log10(');
+      s = s.replace(/\bsin\(/g,'Math.sin(');
+      s = s.replace(/\bcos\(/g,'Math.cos(');
+      s = s.replace(/\btan\(/g,'Math.tan(');
+      s = s.replace(/\bsqrt\(/g,'Math.sqrt(');
 
-          // Evaluate safely-ish
-          // eslint-disable-next-line no-new-func
-          return Function('"use strict";return (' + s + ")")();
+      if(typeof Math.log10 !== 'function'){
+        Math.log10 = function(x){ return Math.log(x)/Math.LN10; };
+      }
+
+      const factFunc = function(n){ if(n < 0) return NaN; n = Math.floor(n); let f=1; for(let i=2;i<=n;i++) f*=i; return f; };
+      let reFact = /(\d+(\.\d+)?|\([^\(\)]+\))!/;
+      while(reFact.test(s)){ s = s.replace(reFact, function(m,p1){ return 'fact(' + p1 + ')'; }); }
+
+      const leftoverLetters = s.replace(/Math|fact/g,'').match(/[A-Za-z]/);
+      if(leftoverLetters){ showTemp('Error'); return; }
+
+      const safeWrap = '\"use strict\"; const fact=' + factFunc.toString() + '; return (' + s + ');';
+      try{
+        const fn = new Function(safeWrap);
+        let val = fn();
+        if(typeof val === 'number'){
+          if(!Number.isFinite(val)){ showTemp('Error'); return; }
+          val = Math.round((val + Number.EPSILON) * 1e12) / 1e12;
+          addHistory(raw + ' = ' + val);
+          exprEl.value = String(val);
+        } else {
+          exprEl.value = String(val);
         }
+      }catch(err){ showTemp('Error'); }
+    }
 
-        // editing primitives
-        function appendText(txt) {
-          expression += txt;
-          updateUI();
-        }
-        function prependText(txt) {
-          expression = txt + expression;
-          updateUI();
-        }
-        function backspace() {
-          expression = expression.slice(0, -1);
-          updateUI();
-        }
-        function clearAll() {
-          expression = "";
-          updateUI();
-        }
+    function addHistory(text){
+      const row = document.createElement('div');
+      row.style.padding = '6px 4px';
+      row.style.borderBottom = '1px solid rgba(255,255,255,0.02)';
+      row.style.cursor = 'pointer';
+      row.style.fontSize = '14px';
+      row.innerHTML = text;
+      row.addEventListener('click', () => { const parts = text.split(' = '); exprEl.value = parts[0] || ''; safeFocus(); });
+      historyEl.prepend(row);
+    }
 
-        function addDot() {
-          // prevent double dot in last number
-          const parts = expression.split(/[^0-9.]/);
-          const last = parts[parts.length - 1] || "";
-          if (last.includes(".")) return;
-          appendText(".");
-        }
+    function showTemp(msg){
+      const prev = exprEl.value;
+      exprEl.value = msg;
+      setTimeout(()=>{ if(document.activeElement !== exprEl) exprEl.value = prev; }, 900);
+    }
 
-        function plusMinus() {
-          const m = expression.match(
-            /(.*?)(\([^()]*\)|\d*\.?\d+(?:e[+\-]?\d+)?|PI|E)\s*$/i
-          );
-          if (!m) {
-            appendText("(-");
-            return;
-          }
-          const head = m[1],
-            token = m[2];
-          if (/\(-/.test(head.slice(-2)) && expression.endsWith(")")) {
-            expression = head.slice(0, -2) + token;
-          } else {
-            expression = `${head}(-${token})`;
-          }
-          updateUI();
-        }
+    // keypad click handler
+    keysEl.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const btn = ev.target.closest('button.key');
+      if(!btn) return;
+      const token = btn.dataset.key || btn.textContent.trim();
+      insertToken(token);
+      safeFocus();
+    }, {passive:false});
 
-        function percent() {
-          const m = expression.match(/(.*?)(\d*\.?\d+(?:e[+\-]?\d+)?)\s*$/i);
-          if (!m) return;
-          expression = `${m[1]}(${m[2]} / 100)`;
-          updateUI();
-        }
+    // keyboard handling
+    const keyMap = { '*':'×', '/': '÷', 'Enter':'=', 'Backspace':'Backspace', 'Escape':'AC', 'Delete':'AC' };
 
-        // memory
-        function mplus() {
-          const v = evaluate(expression || "0");
-          memory += isFinite(v) ? v : 0;
-          updateUI();
-        }
-        function mminus() {
-          const v = evaluate(expression || "0");
-          memory -= isFinite(v) ? v : 0;
-          updateUI();
-        }
-        function mclear() {
-          memory = 0;
-          updateUI();
-        }
-        function mread() {
-          appendText(formatNumber(memory));
-        }
+    document.addEventListener('keydown', (ev) => {
+      const k = ev.key;
+      // Alt shortcuts for append/prepend/reverse
+      if(ev.altKey && (k === 'a' || k === 'A')){ ev.preventDefault(); doAppend(); return; }
+      if(ev.altKey && (k === 'p' || k === 'P')){ ev.preventDefault(); doPrepend(); return; }
+      if(ev.altKey && (k === 'r' || k === 'R')){ ev.preventDefault(); doReverse(); return; }
 
-        // modes
-        function setAppend(on) {
-          appendMode = !!on;
-          if (appendMode) prependMode = false;
-          updateUI();
-        }
-        function setPrepend(on) {
-          prependMode = !!on;
-          if (prependMode) appendMode = false;
-          updateUI();
-        }
+      if(/^\d$/.test(k) || ['+','-','*','/','^','(',')','.','Enter','Backspace','Escape','Delete','%'].includes(k)){
+        ev.preventDefault();
+        const mapped = keyMap[k] || k;
+        // visual highlight
+        highlightByToken(mapped, true);
+        if(k === '*') insertToken('×');
+        else if(k === '/') insertToken('÷');
+        else if(k === 'Enter') insertToken('=');
+        else if(k === 'Backspace') doBackspace();
+        else if(k === 'Escape' || k === 'Delete') insertToken('AC');
+        else insertToken(k);
+        safeFocus();
+        return;
+      }
 
-        // Reverse
-        function doReverse() {
-          expression = expression.split("").reverse().join("");
-          updateUI();
-        }
+      // letter shortcuts for functions (s/c/t/l/g)
+      if(!ev.altKey && ['s','c','t','l','g'].includes(k.toLowerCase())){
+        ev.preventDefault();
+        const map = { s:'sin', c:'cos', t:'tan', l:'ln', g:'log' };
+        insertToken(map[k.toLowerCase()]);
+        highlightByToken(map[k.toLowerCase()], true);
+        setTimeout(()=>highlightByToken(map[k.toLowerCase()], false), 120);
+        safeFocus();
+      }
+    }, {passive:false});
 
-        // buttons listener
-        keysEl.addEventListener("click", (ev) => {
-          const b = ev.target.closest("button");
-          if (!b) return;
-          const act = b.dataset.act;
-          const ins = b.dataset.insert;
+    document.addEventListener('keyup', (ev) => {
+      const k = ev.key;
+      const mapped = keyMap[k] || k;
+      highlightByToken(mapped, false);
+      if(['s','c','t','l','g'].includes(k.toLowerCase())){
+        const map = { s:'sin', c:'cos', t:'tan', l:'ln', g:'log' };
+        highlightByToken(map[k.toLowerCase()], false);
+      }
+    });
 
-          // handle modes: append/prepend when clicking any normal button that inserts text
-          if (!act && ins) {
-            if (appendMode) {
-              appendText(ins);
-              return;
-            }
-            if (prependMode) {
-              prependText(ins);
-              return;
-            }
-            appendText(ins);
-            return;
-          }
+    function highlightByToken(label, on){
+      // try data-key match, else match text for small palette items or ctrl buttons
+      const byKey = document.querySelector('[data-key="'+CSS.escape(label)+'"]');
+      if(byKey){ byKey.classList.toggle('active', !!on); return; }
+      const byFunc = document.querySelector('[data-func="'+CSS.escape(label)+'"]');
+      if(byFunc){ byFunc.classList.toggle('active', !!on); return; }
+      const byText = Array.from(document.querySelectorAll('.key, .small-key, .pal-item, .ctrl-btn')).find(b => (b.textContent||'').trim() === label);
+      if(byText) byText.classList.toggle('active', !!on);
+    }
 
-          if (!act && !ins) {
-            // plain button: text content (numbers, ., etc)
-            const txt = b.textContent.trim();
-            if (appendMode) {
-              appendText(txt);
-              return;
-            }
-            if (prependMode) {
-              prependText(txt);
-              return;
-            }
-            // default: if it's digit or dot or operator we append normally
-            appendText(txt);
-            return;
-          }
+    // keep focus initially
+    safeFocus();
+    exprEl.addEventListener('click', safeFocus);
 
-          // actions
-          switch (act) {
-            case "ac":
-              clearAll();
-              break;
-            case "back":
-              backspace();
-              break;
-            case "equals":
-              try {
-                expression = String(evaluate(expression));
-              } catch (e) {
-                /* leave */
-              }
-              updateUI();
-              break;
-            case "percent":
-              percent();
-              break;
-            case "sign":
-              plusMinus();
-              break;
-            case "rand":
-              appendText(String(Math.random()));
-              break;
-            case "EE":
-              appendText("EE");
-              break;
-            case "toggleDeg":
-            case "Deg":
-              isDeg = !isDeg;
-              updateUI();
-              break;
-            case "mc":
-              mclear();
-              break;
-            case "m+":
-              mplus();
-              break;
-            case "m-":
-              mminus();
-              break;
-            case "mr":
-              mread();
-              break;
-            case "2nd":
-              alt = !alt;
-              toggleSecond();
-              break;
-            default:
-              break;
-          }
-        });
+    // ensure Enter doesn't reload page
+    window.addEventListener('keydown', (e) => { if(e.key === 'Enter' && document.activeElement && document.activeElement.tagName !== 'TEXTAREA') e.preventDefault(); });
 
-        // 2nd toggle - swap sin<->asin etc
-        function toggleSecond() {
-          const map = [
-            {
-              sel: 'button[data-insert="sin("]',
-              a: { label: "sin", tok: "sin(" },
-              b: { label: "asin", tok: "asin(" },
-            },
-            {
-              sel: 'button[data-insert="cos("]',
-              a: { label: "cos", tok: "cos(" },
-              b: { label: "acos", tok: "acos(" },
-            },
-            {
-              sel: 'button[data-insert="tan("]',
-              a: { label: "tan", tok: "tan(" },
-              b: { label: "atan", tok: "atan(" },
-            },
-          ];
-          map.forEach(({ sel, a, b }) => {
-            const btn = document.querySelector(sel);
-            if (!btn) return;
-            if (alt) {
-              btn.textContent = b.label;
-              btn.dataset.insert = b.tok;
-            } else {
-              btn.textContent = a.label;
-              btn.dataset.insert = a.tok;
-            }
-          });
-        }
-
-        // keyboard support + special handling for append/prepend modes
-        window.addEventListener("keydown", (e) => {
-          const k = e.key;
-          const isPrintable =
-            /^[0-9+\-*/().%]$/.test(k) ||
-            k === "." ||
-            k === "*" ||
-            k === "+" ||
-            k === "-" ||
-            k === "/" ||
-            k === "%";
-          if (isPrintable) {
-            // intercept if append/prepend mode is active
-            if (appendMode) {
-              e.preventDefault();
-              appendText(k);
-              return;
-            } else if (prependMode) {
-              e.preventDefault();
-              prependText(k);
-              return;
-            } else {
-              // default — insert at caret in contenteditable
-              // let contenteditable handle it; but we also update our expression variable after short delay
-              // do nothing here; rely on input event on exprEl
-              return;
-            }
-          }
-          if (k === "Backspace") {
-            e.preventDefault();
-            backspace();
-            return;
-          }
-          if (k === "Enter") {
-            e.preventDefault();
-            try {
-              expression = String(evaluate(expression));
-            } catch {}
-            updateUI();
-            return;
-          }
-        });
-
-        // allow typing into expression area and keep expression in sync
-        exprEl.addEventListener("input", () => {
-          // read textContent as expression (user can type freely)
-          expression = exprEl.textContent || "";
-          updateUI();
-        });
-
-        // toolbar UI actions
-        appendToggle.addEventListener("click", () => {
-          setAppend(!appendMode);
-        });
-        prependToggle.addEventListener("click", () => {
-          setPrepend(!prependMode);
-        });
-        reverseBtn.addEventListener("click", () => {
-          doReverse();
-        });
-        degToggle.addEventListener("click", () => {
-          isDeg = !isDeg;
-          updateUI();
-        });
-
-        // small-screen scientific toggle: show/hide overlay using cloned sciGrid (works same as before)
-        function setupSciFloat() {
-          const floatBtn = document.getElementById("sciFloat");
-          if (!floatBtn) return;
-          floatBtn.style.display = window.innerWidth <= 980 ? "flex" : "none";
-          floatBtn.addEventListener("click", () => {
-            // create an overlay panel that slides up with contents of sciPanel
-            let overlay = document.getElementById("sciOverlay");
-            if (overlay) {
-              overlay.remove();
-              return;
-            }
-            overlay = document.createElement("div");
-            overlay.id = "sciOverlay";
-            overlay.style.position = "fixed";
-            overlay.style.left = "0";
-            overlay.style.right = "0";
-            overlay.style.bottom = "0";
-            overlay.style.background =
-              "linear-gradient(180deg,#232428,#1f1f1f)";
-            overlay.style.padding = "12px";
-            overlay.style.borderTopLeftRadius = "12px";
-            overlay.style.borderTopRightRadius = "12px";
-            overlay.style.boxShadow = "0 -8px 30px rgba(0,0,0,.6)";
-            overlay.style.zIndex = 9999;
-            overlay.style.display = "grid";
-            overlay.style.gridTemplateColumns = "repeat(5,1fr)";
-            overlay.style.gap = "8px";
-            // copy sciGrid buttons
-            const nodes = document.querySelectorAll("#sciGrid > button");
-            nodes.forEach((n) => {
-              const clone = n.cloneNode(true);
-              clone.style.padding = "14px";
-              clone.addEventListener("click", (ev) => {
-                // forward click to keys behavior by dispatching click on same dataset
-                const ins = clone.dataset.insert;
-                if (appendMode) appendText(ins || clone.innerText);
-                else if (prependMode) prependText(ins || clone.innerText);
-                else appendText(ins || clone.innerText);
-                // small animation then remove overlay
-                overlay.remove();
-              });
-              overlay.appendChild(clone);
-            });
-            // close area
-            const close = document.createElement("button");
-            close.textContent = "Close";
-            close.style.gridColumn = "span 5";
-            close.style.padding = "12px";
-            close.style.background = "var(--red)";
-            close.style.color = "#fff";
-            close.style.border = "none";
-            close.style.borderRadius = "8px";
-            close.addEventListener("click", () => overlay.remove());
-            overlay.appendChild(close);
-            document.body.appendChild(overlay);
-          });
-        }
-
-        // respond to resize to show small-screen float
-        window.addEventListener("resize", () => {
-          setupSciFloat();
-        });
-        // initial
-        setupSciFloat();
-        updateUI();
-
-        // expose some functions to global for debugging if needed
-        window.calcHelpers = {
-          setAppend,
-          setPrepend,
-          appendText,
-          prependText,
-          clearAll,
-          backspace,
-          evaluate,
-        };
-      })();
-    </script>
-  </body>
+  })();
+  </script>
+</body>
 </html>
