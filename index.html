@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Scientific Calculator — Fixed</title>
+  <title>Scientific Calculator</title>
   <link rel="stylesheet" href="./style.css">
 
    <!-- icon -->
@@ -27,8 +27,8 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>SCIENTIFIC CALCULATOR</h1>
-      <p>Shortcuts : Alt+A Append, Alt+P Prepend, Alt+R Reverse</p>
+      <h1>Scientific Calculator</h1>
+      <p>Keyboard + on-screen buttons work together. Shortcuts: Alt+A Append, Alt+P Prepend, Alt+R Reverse</p>
     </header>
 
     <div class="calc" id="calc">
@@ -110,7 +110,7 @@
     // State for append/prepend mode
     let currentMode = 'none';
 
-    // Keep focus on expr
+    // Keep focus on expr ONLY when the user clicks the input field
     function safeFocus(){ try { exprEl.focus(); } catch(e) {} }
 
     // Unified mode toggling and visual feedback
@@ -127,7 +127,7 @@
       } else if (currentMode === 'prepend') {
         btnPrepend.classList.add('primary');
       }
-      safeFocus();
+      exprEl.blur(); // Blur the input field to hide the keyboard
     }
 
     // Append/Prepend/Reverse actions now use the expression box value
@@ -141,7 +141,7 @@
       exprEl.value = String(exprEl.value || '').split('').reverse().join(''); 
       setMode('none');
       btnFlash(btnReverse);
-      safeFocus();
+      exprEl.blur(); // Blur the input field to hide the keyboard
     }
 
     btnAppend.addEventListener('click', (e)=>{ e.preventDefault(); doAppend(); });
@@ -286,7 +286,8 @@
       if(!btn) return;
       const token = btn.dataset.key || btn.textContent.trim();
       insertToken(token);
-      safeFocus();
+      // Remove focus from the input field after button click
+      exprEl.blur();
     }, {passive:false});
 
     // keyboard handling
@@ -310,7 +311,7 @@
         else if(k === 'Backspace') doBackspace();
         else if(k === 'Escape' || k === 'Delete') insertToken('AC');
         else insertToken(k);
-        safeFocus();
+        exprEl.blur();
         return;
       }
 
@@ -321,7 +322,7 @@
         insertToken(map[k.toLowerCase()]);
         highlightByToken(map[k.toLowerCase()], true);
         setTimeout(()=>highlightByToken(map[k.toLowerCase()], false), 120);
-        safeFocus();
+        exprEl.blur();
       }
     }, {passive:false});
 
@@ -345,8 +346,7 @@
       if(byText) byText.classList.toggle('active', !!on);
     }
 
-    // keep focus initially
-    safeFocus();
+    // Call safeFocus ONLY on click, not page load
     exprEl.addEventListener('click', safeFocus);
 
     // ensure Enter doesn't reload page
