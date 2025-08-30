@@ -3,7 +3,19 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="description" content="A fully functional scientific calculator with a clean design, history, and keyboard shortcuts."/>
+  <meta name="keywords" content="scientific, calculator, HTML, CSS, JavaScript, math, physics, equations, functions"/>
+  <meta name="author" content="shanmugapriyan"/>
+  <meta property="og:title" content="Scientific Calculator"/>
+  <meta property="og:description" content="A fully functional scientific calculator with a clean design, history, and keyboard shortcuts."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://scientific-calculator-mu-five.vercel.app/"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Scientific Calculator"/>
+  <meta name="twitter:description" content="A fully functional scientific calculator with a clean design, history, and keyboard shortcuts."/>
+  <meta name="twitter:site" content="@20imt32"/>
   <title>Scientific Calculator</title>
+
   <link rel="stylesheet" href="./style.css">
 
    <!-- icon -->
@@ -22,13 +34,13 @@
      rel="stylesheet"
    />
 
-
+  
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Scientific Calculator</h1>
-      <p>Keyboard + on-screen buttons work together. Shortcuts: Alt+A Append, Alt+P Prepend, Alt+R Reverse</p>
+      <h1>SCIENTIFIC CALCULATOR</h1>
+      <p>Shortcuts : Alt+A Append, Alt+P Prepend, Alt+R Reverse</p>
     </header>
 
     <div class="calc" id="calc">
@@ -62,7 +74,7 @@
           <button class="key" data-key="log">log</button>
 
           <button class="key" data-key="AC">AC</button>
-          <button class="key" data-key="+/-">+/-</button>
+          <button class="key" data-key="Backspace">⌫</button>
           <button class="key" data-key="%">%</button>
           <button class="key op" data-key="÷">÷</button>
 
@@ -177,6 +189,10 @@
 
       const displayOp = (t) => t === '*' ? '×' : t === '/' ? '÷' : t;
 
+      if(token === 'Backspace'){
+        doBackspace();
+        return;
+      }
       if(token === '('){
         if(s && /[0-9\)\.πe]$/.test(s)) exprEl.value = s + '×(';
         else exprEl.value = s + '(';
@@ -291,7 +307,7 @@
     }, {passive:false});
 
     // keyboard handling
-    const keyMap = { '*':'×', '/': '÷', 'Enter':'=', 'Backspace':'Backspace', 'Escape':'AC', 'Delete':'AC' };
+    const keyMap = { '*': '×', '/': '÷', 'Enter': '=', 'Backspace': 'Backspace', 'Escape': 'AC', 'Delete': 'AC' };
 
     document.addEventListener('keydown', (ev) => {
       const k = ev.key;
